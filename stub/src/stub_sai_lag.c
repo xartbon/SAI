@@ -341,10 +341,6 @@ sai_status_t stub_create_lag_member(
     sai_attr_list_to_str(attr_count, attr_list, lag_member_attribs, MAX_LIST_VALUE_STR_LEN, list_str);
     printf("CREATE LAG MEMBER: 0x%lX (%s)\n", *lag_member_id, list_str);
 
-    lag_db.members[lag_member_db_id].is_used = true;
-    lag_db.members[lag_member_db_id].lag_oid = lag_id->oid;
-    lag_db.members[lag_member_db_id].port_oid = port_id->oid;
-
     // update LAG entry to have this member
     uint32_t lag_db_id;
     status = stub_object_to_type(lag_id->oid, SAI_OBJECT_TYPE_LAG, &lag_db_id);
@@ -353,6 +349,10 @@ sai_status_t stub_create_lag_member(
         return status;
     }
     lag_db.lags[lag_db_id].members_ids[lag_member_db_id] = *lag_member_id;
+
+    lag_db.members[lag_member_db_id].is_used = true;
+    lag_db.members[lag_member_db_id].lag_oid = lag_id->oid;
+    lag_db.members[lag_member_db_id].port_oid = port_id->oid;
 
     STUB_LOG_EXIT();
     return status;
